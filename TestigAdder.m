@@ -19,7 +19,10 @@
             %simIn = setBlockParameter()
 
             %Simulate model and store the output in out 
-
+            
             out = sim(SimIn);
-
+            %sum output
             Sum = out.yout{1}.Values.Data;
+            %plot second output (sine wave)
+            plot(out.yout{2}.Values.Time,out.yout{2}.Values.Data);
+            
