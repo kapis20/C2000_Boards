@@ -1,3 +1,8 @@
+%clear console and workspace beforehand
+clc;
+clear; 
+
+
 %% Set PWM Switching frequency
 PWM_frequency 	= 20e3;    %Hz          // converter s/w freq need to vary between 16 and 24 kHz 
 T_pwm           = 1/PWM_frequency;  %s  // PWM switching time period
