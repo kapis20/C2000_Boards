@@ -6,11 +6,11 @@
 
 load_system('open_loop_for_running');
 %% Set parameters from Dashboard selection
-PWM_frequency = eval(get_param([bdroot '/Open-loop control/Parameters/PWM Frequency'], 'Value'));               %Hz   PWM frquency
-motor_polePairs     = eval(get_param([bdroot '/Open-loop control/Parameters/Number of pole pairs'], 'Value'));  %     Pole Pairs for the motor
-motor_base_speed    = eval(get_param([bdroot '/Open-loop control/Parameters/Base Speed'], 'Value'));            %rpm  Rated speed (Synchronous Speed)
+PWM_frequency = eval(get_param([bdroot '/Open_loop_control/Parameters/PWM Frequency'], 'Value'));               %Hz   PWM frquency
+motor_polePairs     = eval(get_param([bdroot '/Open_loop_control/Parameters/Number of pole pairs'], 'Value'));  %     Pole Pairs for the motor
+motor_base_speed    = eval(get_param([bdroot '/Open_loop_control/Parameters/Base Speed'], 'Value'));            %rpm  Rated speed (Synchronous Speed)
 
-selectedDataType = eval(get_param([bdroot '/Open-loop control/Parameters/Data Type'],'Value'));
+selectedDataType = eval(get_param([bdroot '/Open_loop_control/Parameters/Data Type'],'Value'));
 if selectedDataType == 0
     dataType = 'single';
 else
