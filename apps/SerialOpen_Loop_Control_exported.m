@@ -100,7 +100,7 @@ classdef SerialOpen_Loop_Control_exported < matlab.apps.AppBase
             FOC = 'FOC';
 
             % Set up communication port
-            %app.device = serialport("COM7",5e6);
+            app.device = serialport("COM7",5e6);
             % Enable the operation and create a message
             app.Operation = uint16(1);
 
