@@ -44,7 +44,7 @@ timeInterval = 1 / 12e6; % Time interval between samples in seconds
  title('Real-Time Plot');
  legend('DataA', 'DataB');
 % 
-% numofPoints = 600;
+ numofPoints = 600;
 % 
 % % Create timer object
 % timerObj = timer('TimerFcn', @(~,~)updatePlot(device, hLine, AllElements), ...
@@ -82,14 +82,14 @@ try
         %extract every second element 
         Data2= data(2:2:end)
         %Data1=data(:,1)
-        %Data2=data(:,2)
-
+     
+        
         % Construct time vector
-        timeVector = (0:matrixsize(1)-1) * timeInterval;
+        %timeVector = (0:matrixsize(1)-1) * timeInterval;
 
         %element wise multiplication:(Speed and ref)
-        DataA = Data1 .* PU_System.N_base;
-        DataB = Data2 .* PU_System.N_base;
+         DataA = Data1 .* PU_System.N_base;
+         DataB = Data2 .* PU_System.N_base;
         %  % %reshape data into the desired matrix shape 
         % % receivedData = reshape(data,[600,2]);
         % % DataA = receivedData(:,1);
@@ -98,10 +98,15 @@ try
         % % set(hLineB, 'XData', linspace(0, 0.1, numofPoints), 'YData', DataB);
         % % % Force MATLAB to update the plot
         % Update the plot
-        set(hLine(1), 'XData', timeVector, 'YData', Data1); % Update the first line with Data1
-        set(hLine(2), 'XData', timeVector, 'YData', Data2); % Update the second line with Data2
+        %plot(linspace(0,0.1,numofPoints),DataB);
+        %hold on
+        %plot(linspace(0,0.1,numofPoints),DataB);
+        %set(hLine(1), 'XData', linspace(0,0.1,numofPoints), 'YData', DataA); % Update the first line with Data1
+        %set(hLine(2), 'XData', linspace(0,0.1,numofPoints), 'YData', DataB); % Update the second line with Data2
         % Force MATLAB to update the plot
-        %drawnow;
+        drawnow;
+        pause(0.01);
+        
     end
 catch ME
     clear device;
