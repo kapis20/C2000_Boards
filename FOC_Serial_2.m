@@ -4,7 +4,7 @@ device = serialport("COM13",12e6);
 
 %% messages 
 SpeedRPM = single(-600);
-enable = single(16);
+enable = single(80);
 
 SpeedRPM = SpeedRPM * 1/PU_System.N_base;
 
@@ -36,7 +36,7 @@ DataB = zeros(matrixsize(1), 1);
     
 
 % Pre-calculate time vector
- time = linspace(0, timeInterval*(matrixsize(1)-1), matrixsize(1));
+ %time = linspace(0, timeInterval*(matrixsize(1)-1), matrixsize(1));
  figure;
  hLine = plot(NaN(matrixsize(1), 2));  % Initialize an empty plot with 2 lines
 
@@ -55,10 +55,15 @@ try
     DataA = data(1:2:end) .* PU_System.N_base;
     DataB = data(2:2:end) .* PU_System.N_base;
     
- 
-    % Update plot data efficiently
-    set(hLine(1), 'YData', DataA);
-    set(hLine(2), 'YData', DataB);
+    % Calculate time vector for the current data
+    time = linspace(0, (matrixsize(1) - 1) * timeInterval, matrixsize(1));
+      % Update plot data and time vector
+    set(hLine(1), 'XData', time, 'YData', DataA);
+    set(hLine(2), 'XData', time, 'YData', DataB);
+
+    % % Update plot data efficiently
+    % set(hLine(1), 'YData', DataA);
+    % set(hLine(2), 'YData', DataB);
 
     % Force MATLAB to update the plot
     drawnow;
