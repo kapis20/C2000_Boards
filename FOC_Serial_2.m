@@ -28,7 +28,7 @@ matrixsize = [20, 2];  % Reduced data size for smoother plotting
 AllElements = prod(matrixsize);
 
 % Define time interval between samples
-timeInterval = 1 / 12e6; % Time interval between samples in seconds
+%timeInterval = 1 / 12e6; % Time interval between samples in seconds
 
 
  figure;
@@ -42,10 +42,13 @@ timeInterval = 1 / 12e6; % Time interval between samples in seconds
  % Initialize empty arrays for DataA and DataB
     DataA = [];
     DataB = [];
+% Capture starting time for real-time x-axis
+%startTime = datetime('now');
 
 try
   while true
     data = read(device, AllElements, 'single');
+    startTime = datetime('now');
       % Extract DataA and DataB from received data and concatenate with existing arrays
       %Mode1
         % DataA = [DataA, data(1:2:end) .* PU_System.N_base];
@@ -54,11 +57,20 @@ try
       DataA = [DataA, data(1:2:end) .* PU_System.I_base];
       DataB = [DataB, data(2:2:end) .* 2*pi];
 
-    if numel(DataA) == 2000
+    if numel(DataA) == 2500
     DataA = rmoutliers(DataA);
     DataB = rmoutliers(DataB);
-    set(hLine(1), 'XData', linspace(0,numel(DataA),numel(DataA)), 'YData', DataA);
-    set(hLine(2), 'XData', linspace(0,numel(DataB),numel(DataB)), 'YData', DataB);
+
+    % Calculate elapsed time
+        currentTime = datetime('now');
+        elapsedTime = seconds(currentTime - startTime);
+     % Generate time points for the x-axis
+        xData = linspace(0, elapsedTime, numel(DataA));
+    % Update plot data and x-axis
+        set(hLine(1), 'XData', xData, 'YData', DataA);
+        set(hLine(2), 'XData', xData, 'YData', DataB);
+    % set(hLine(1), 'XData', linspace(0,numel(DataA),numel(DataA)), 'YData', DataA);
+    % set(hLine(2), 'XData', linspace(0,numel(DataB),numel(DataB)), 'YData', DataB);
     drawnow;
     pause(0.05);  % Adjust pause time as needed
     DataA = [];
