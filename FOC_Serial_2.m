@@ -4,7 +4,7 @@ device = serialport("COM13",12e6);
 
 %% messages 
 SpeedRPM = single(-600);
-enable = single(80);
+enable = single(16);
 
 SpeedRPM = SpeedRPM * 1/PU_System.N_base;
 
@@ -32,8 +32,8 @@ AllElements = prod(matrixsize);
 
 
  figure;
- %hLine = plot(NaN(matrixsize(1), 2));  % Initialize an empty plot with 2 lines
- hLine = plot(linspace(0,1200,1200),NaN(1200, 2) );  % Initialize an empty plot with 2 lines
+ hLine = plot(NaN(matrixsize(1), 2));  % Initialize an empty plot with 2 lines
+ %hLine = plot(linspace(0,1200,1200),NaN(1200, 2) );  % Initialize an empty plot with 2 lines
 
  xlabel('Time (s)');
  ylabel('Data');
@@ -51,11 +51,11 @@ try
     startTime = datetime('now');
       % Extract DataA and DataB from received data and concatenate with existing arrays
       %Mode1
-        % DataA = [DataA, data(1:2:end) .* PU_System.N_base];
-        % DataB = [DataB, data(2:2:end) .* PU_System.N_base];
+        DataA = [DataA, data(1:2:end) .* PU_System.N_base];
+        DataB = [DataB, data(2:2:end) .* PU_System.N_base];
     %Mode 5
-      DataA = [DataA, data(1:2:end) .* PU_System.I_base];
-      DataB = [DataB, data(2:2:end) .* 2*pi];
+      % DataA = [DataA, data(1:2:end) .* PU_System.I_base];
+      % DataB = [DataB, data(2:2:end) .* 2*pi];
 
     if numel(DataA) == 2500
     DataA = rmoutliers(DataA);
