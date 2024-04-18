@@ -11,25 +11,35 @@ write(device,message,'single');
 %% Receive 
 % matrixsize = [10,2;2,2];  %array with  columns 
 % AllElements = prod(matrixsize); %gets number of daatests to collect from an array 
-
+    data1 = [];
+    data2 = [];
+    data3 = [];
+    data4 =[];
 try
   while true
-    data = read(device, 20, 'uint32');
+    data = read(device, 40, 'single');
     % data1 = bitand(data, hex2dec('0000FFFF')); % Extract lower 16 bits
     % data2 = bitshift(bitand(data, hex2dec('FFFF0000')), -16); % Extract upper 16 bits
     % Extract individual uint16 datasets
+    %Extract datasets 
+    % data1 = [data1, data(1:4:end)];
+    % data2 = [data2, data(2:4:end)];
+    % data3 = [data3, data(3:4:end)];
+    % data4 =[data4, data(4:4:end)];
+    % datax = typecast(data1,'single');
     % data1 = uint16(bitand(bitshift(data, -48), hex2dec('FFFF')));
     % data2 = uint16(bitand(bitshift(data, -32), hex2dec('FFFF')));
     % data3 = uint16(bitand(bitshift(data, -16), hex2dec('FFFF')));
     % data4 = uint16(bitand(data, hex2dec('FFFF')));
-    
-    % Convert uint16 datasets to single
+    % 
+    % % Convert uint16 datasets to single
     % data1_single = single(data1);
     % data2_single = single(data2);
     % data3_single = single(data3);
     % data4_single = single(data4);
         % Convert the uint16 datasets to single
     %dataConverted=typecast(data,'single');
+    %dataConverted = typecast(data,'single');
      data1_single = single(typecast(uint32(data), 'single'));
     % data2_single = single(typecast(uint16(data2), 'single'));
 
