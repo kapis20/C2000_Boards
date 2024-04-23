@@ -2,30 +2,55 @@
 device = serialport("COM9",12e6);
 
 %% Write 
-enable = 18;
+enable = 19;
 RefSpeed =700;
 %Need to convert speed accordinly as in the host model
 Speed = RefSpeed *1/PU_System.N_base;
 message = [Speed;enable]
 write(device,message,'single');
 %% Receive 
-% matrixsize = [10,2;2,2];  %array with  columns 
+ matrixsize = [20,2];  %array with  columns 
 % AllElements = prod(matrixsize); %gets number of daatests to collect from an array 
+AllElements = prod(matrixsize);
     data1 = [];
     data2 = [];
     data3 = [];
     data4 =[];
+    figure;
+    hLine = plot(NaN(matrixsize(1), 2)); 
 try
   while true
-    data = read(device, 40, 'single');
+    data = read(device, 300, 'single');
+    startTime = datetime('now');
     % data1 = bitand(data, hex2dec('0000FFFF')); % Extract lower 16 bits
     % data2 = bitshift(bitand(data, hex2dec('FFFF0000')), -16); % Extract upper 16 bits
     % Extract individual uint16 datasets
     %Extract datasets 
-    % data1 = [data1, data(1:4:end)];
-    % data2 = [data2, data(2:4:end)];
-    % data3 = [data3, data(3:4:end)];
-    % data4 =[data4, data(4:4:end)];
+    %data= single(typecast(uint32(data), 'single'));
+     data1 = [data1, data(1:4:end).* PU_System.N_base];
+     data2 = [data2, data(2:4:end).* PU_System.N_base];
+     data3 = [data3, data(3:4:end).* PU_System.I_base];
+     data4 =[data4, data(4:4:end)* PU_System.I_base];
+
+     if numel(data1) > 2500
+        data1 = rmoutliers(data1);
+        data2 = rmoutliers(data2);
+        data3 = rmoutliers(data3);
+        data4 = rmoutliers(data4);
+        currentTime = datetime('now');
+        elapsedTime = seconds(currentTime - startTime);
+         xData = linspace(0, elapsedTime, numel(data1));
+     % 
+        %  plot(data1);
+        % hold on;
+        % plot(data2);
+        set(hLine(1),'XData', xData,'YData', data1);
+        set(hLine(2),'XData', xData, 'YData', data2);
+        drawnow;
+        pause(0.05);  % Adjust pause time as needed
+        data1=[];
+        data2=[];
+     end
     % datax = typecast(data1,'single');
     % data1 = uint16(bitand(bitshift(data, -48), hex2dec('FFFF')));
     % data2 = uint16(bitand(bitshift(data, -32), hex2dec('FFFF')));
@@ -40,7 +65,7 @@ try
         % Convert the uint16 datasets to single
     %dataConverted=typecast(data,'single');
     %dataConverted = typecast(data,'single');
-     data1_single = single(typecast(uint32(data), 'single'));
+     %data1_single = single(typecast(uint32(data), 'single'));
     % data2_single = single(typecast(uint16(data2), 'single'));
 
   end
