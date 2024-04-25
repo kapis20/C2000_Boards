@@ -8,7 +8,12 @@ RefSpeed =700;
 Speed = RefSpeed *1/PU_System.N_base;
 message = [Speed;enable]
 write(device,message,'single');
+
+delete(device);
+clear device
 %% Receive 
+device = serialport("COM9",12e6);
+% configureTerminator(device,"CR");
  matrixsize = [20,2];  %array with  columns 
 % AllElements = prod(matrixsize); %gets number of daatests to collect from an array 
 AllElements = prod(matrixsize);
@@ -20,23 +25,36 @@ AllElements = prod(matrixsize);
     hLine = plot(NaN(matrixsize(1), 2)); 
 try
   while true
-    data = read(device, 300, 'single');
+    data = read(device, 300, 'uint32');
+   
+  
     startTime = datetime('now');
+    %data1_single = single(typecast(uint32(data), 'single'));
     % data1 = bitand(data, hex2dec('0000FFFF')); % Extract lower 16 bits
     % data2 = bitshift(bitand(data, hex2dec('FFFF0000')), -16); % Extract upper 16 bits
     % Extract individual uint16 datasets
     %Extract datasets 
     %data= single(typecast(uint32(data), 'single'));
-     data1 = [data1, data(1:4:end).* PU_System.N_base];
-     data2 = [data2, data(2:4:end).* PU_System.N_base];
-     data3 = [data3, data(3:4:end).* PU_System.I_base];
-     data4 =[data4, data(4:4:end)* PU_System.I_base];
+      data1 = [data1, data(1:2:end)];
+      data2 = [data2, data(2:2:end)];
+     % data1 = [data1, data(1:4:end).* PU_System.N_base];
+     % data2 = [data2, data(2:4:end).* PU_System.N_base];
+     % data3 = [data3, data(3:4:end).* PU_System.I_base];
+     % data4 =[data4, data(4:4:end)* PU_System.I_base];
 
      if numel(data1) > 2500
         data1 = rmoutliers(data1);
         data2 = rmoutliers(data2);
-        data3 = rmoutliers(data3);
-        data4 = rmoutliers(data4);
+        data1Single = single(typecast(uint32(data1), 'single'))
+        data2Single = single(typecast(uint32(data2), 'single'))
+
+            for i = 1:1:length(data1Single)
+                if data1Single(i) == 0.1675078
+                    x = 1.398e+09;
+                end
+            end
+        % data3 = rmoutliers(data3);
+        % data4 = rmoutliers(data4);
         currentTime = datetime('now');
         elapsedTime = seconds(currentTime - startTime);
          xData = linspace(0, elapsedTime, numel(data1));
@@ -44,12 +62,14 @@ try
         %  plot(data1);
         % hold on;
         % plot(data2);
-        set(hLine(1),'XData', xData,'YData', data1);
-        set(hLine(2),'XData', xData, 'YData', data2);
+        set(hLine(1),'XData', xData,'YData', data1Single);
+        set(hLine(2),'XData', xData, 'YData', data2Single);
         drawnow;
         pause(0.05);  % Adjust pause time as needed
-        data1=[];
-        data2=[];
+        data1Single=[];
+        data2Single=[];
+        data1 = [];
+        data2 =[];
      end
     % datax = typecast(data1,'single');
     % data1 = uint16(bitand(bitshift(data, -48), hex2dec('FFFF')));
