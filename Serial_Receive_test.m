@@ -2,8 +2,11 @@
 device = serialport("COM9",12e6);
 
 %% Write 
-enable = 18 ;
-RefSpeed =3000;
+% option 1 = 17, 19 
+% option 2 = 33, 35 (higher numbers - field weakening enabled 
+% option 3 = 51, 49 
+enable = 50 ;
+RefSpeed =1000;
 %Need to convert speed accordinly as in the host model
 Speed = RefSpeed *1/PU_System.N_base;
 message = [Speed;enable]
@@ -63,26 +66,50 @@ try
       % % data2 = [data2, Singleval(2:2:end)];
       % % DataSpeed1 = [DataSpeed1, data1(1:2:end)];
       % % DataSpeed2 = [DataSpeed2, data1(2:2:end)];
-
-      data1 = [data1, Singleval1(1:2:end)];
-      data2 = [data2, Singleval1(2:2:end)];
-      data3 = [data3, Singleval2(1:2:end)];
-      data4 = [data3, Singleval2(2:2:end)]
+      % 
+      % data1 = [data1, Singleval1(1:2:end)];
+      % data2 = [data2, Singleval1(2:2:end)];
+      % data3 = [data3, Singleval2(1:2:end)];
+      % data4 = [data3, Singleval2(2:2:end)];
+      %Speed and %Iq 
        % data1 = [data1, Singleval1(1:2:end).* PU_System.N_base];
        % data2 = [data2, Singleval1(2:2:end).* PU_System.N_base];
        % data3 = [data3, Singleval2(1:2:end).* PU_System.I_base];
        % data4 =[data4, Singleval2(2:2:end)* PU_System.I_base];
-      % 
-       if numel(data1) > 1000
+       % FilteredSpeed = MAF_filter(data2,19,5);
+       % %Id and Ia/Ib
+       %  data1 = [data1, Singleval1(1:2:end).* PU_System.I_base];
+       % data2 = [data2, Singleval1(2:2:end).* PU_System.I_base];
+       % data3 = [data3, Singleval2(1:2:end).* PU_System.I_base];
+       % data4 =[data4, Singleval2(2:2:end)* PU_System.I_base];
+       % Filtereddata3 = MAF_filter(data3,5,3);
+       % Filtereddata4 = MAF_filter(data4,5,3);
+
+       %Speed and Torque power 
+       data1 = [data1, Singleval1(1:2:end).* PU_System.N_base];
+       data2 = [data2, Singleval1(2:2:end).* PU_System.N_base];
+       data3 = [data3, Singleval2(1:2:end).* PU_System.T_base];
+       data4 = [data4, Singleval2(2:2:end).* PU_System.P_base];
+        
+
+       if numel(data1) > 500
          % Get current time elapsed
          timeElapsed = seconds(datetime('now') - startTime);
          xData = linspace(0, timeElapsed, numel(data1));
           % Update plots
             set(hLine1(1), 'XData', xData, 'YData', data1);
              set(hLine1(2), 'XData', xData, 'YData', data2);
-             set(hLine2(1), 'XData', xData, 'YData', data3);
-             set(hLine2(2), 'XData', xData, 'YData', data4);
-       
+            set(hLine2(1), 'XData', xData, 'YData', data3);
+            set(hLine2(2), 'XData', xData, 'YData', data4);
+            % for Speed
+             % set(hLine1(2), 'XData', xData, 'YData', FilteredSpeed{5,19});
+              % set(hLine2(1), 'XData', xData, 'YData', data3);
+              % set(hLine2(2), 'XData', xData, 'YData', data4);
+            
+             % % For Ia and IB
+             % set(hLine2(1), 'XData', xData, 'YData', Filtereddata3{2,5});
+             % set(hLine2(2), 'XData', xData, 'YData', Filtereddata4{2,5});
+             % 
              drawnow; % Update the plots
               data1 =[];
                 data2 = [];
