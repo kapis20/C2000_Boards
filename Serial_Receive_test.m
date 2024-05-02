@@ -13,51 +13,65 @@ delete(device);
 clear device
 %% Receive 
 device = serialport("COM9",12e6);
-% configureTerminator(device,"CR");
- matrixsize = [20,2];  %array with  columns 
-% AllElements = prod(matrixsize); %gets number of daatests to collect from an array 
-AllElements = prod(matrixsize);
+
     data1 = [];
     data2 = [];
-    DataSpeed1 = [];
-    DataSpeed2 = [];
-    data3 = [];
-    data4 =[];
+    data3 = []; 
+    data4 = [];
+    % Create figure and subplot handles
     figure;
-    hLine = plot(NaN(matrixsize(1), 2)); 
+    subplot(2,1,1);
+    hLine1 = plot(NaN, NaN, NaN, NaN);  % Placeholder for first subplot
+    title('Data 1 and Data 2');
+    xlabel('Time');
+    ylabel('Values');
+    legend('Data 1', 'Data 2');
+    
+    subplot(2,1,2);
+    hLine2 = plot(NaN, NaN, NaN, NaN);  % Placeholder for second subplot
+    title('Data 3 and Data 4');
+    xlabel('Time');
+    ylabel('Values');
+    legend('Data 3', 'Data 4');
+
     inverse_Scaling_Factor =  single(uint32(4294967295)) / single(uint16(65535));
-%     % Calculate the inverse scale factor using single precision
-% inverse_scale_factor1 = single(uint64(18446744073709551615)) / single(uint32(4294967295));
+    %timeStamps =[];
 
 try
   while true
     data = read(device, 600, 'uint16');
-    % Single2 = single(typecast(uint32(data), 'single'))
-    % Scale the uint32 value back up to uint64 and maintain single precision
-    % uint64_value_restored = uint64(single(data) * inverse_scale_factor1);
-    % Singleval1 = single(typecast(uint64(uint64_value_restored), 'single'))
-    datax = single(typecast(uint32(data), 'single'))
-  
+    startTime = datetime('now');
+    % = [timeStamps, currentTime];  % Append current time to timestamps
     uint32_value_restored = uint32(single(data) * inverse_Scaling_Factor);
     Singleval = single(typecast(uint32(uint32_value_restored), 'single'))
-  
-    startTime = datetime('now');
-    %data1_single = single(typecast(uint32(data), 'single'));
-    % data1 = bitand(data, hex2dec('0000FFFF')); % Extract lower 16 bits
-    % data2 = bitshift(bitand(data, hex2dec('FFFF0000')), -16); % Extract upper 16 bits
-    % Extract individual uint16 datasets
-    %Extract datasets 
-    %data= single(typecast(uint32(data), 'single'));
-      data1 = [data1, Singleval(1:2:end)];
-      data2 = [data2, Singleval(2:2:end)];
-      DataSpeed1 = [DataSpeed1, data1(1:2:end)];
-      DataSpeed2 = [DataSpeed2, data1(2:2:end)];
-     % data1 = [data1, data(1:4:end).* PU_System.N_base];
-     % data2 = [data2, data(2:4:end).* PU_System.N_base];
-     % data3 = [data3, data(3:4:end).* PU_System.I_base];
-     % data4 =[data4, data(4:4:end)* PU_System.I_base];
 
-     % if numel(DataSpeed1) > 2500
+    
+      % data1 = [data1, Singleval(1:2:end)];
+      % data2 = [data2, Singleval(2:2:end)];
+      % DataSpeed1 = [DataSpeed1, data1(1:2:end)];
+      % DataSpeed2 = [DataSpeed2, data1(2:2:end)];
+      data1 = [data1, Singleval(1:4:end).* PU_System.N_base];
+      data2 = [data2, Singleval(2:4:end).* PU_System.N_base];
+      data3 = [data3, Singleval(3:4:end).* PU_System.I_base];
+      data4 =[data4, Singleval(4:4:end)* PU_System.I_base];
+
+      if numel(data1) > 1000
+        % Get current time elapsed
+        timeElapsed = seconds(datetime('now') - startTime);
+        xData = linspace(0, timeElapsed, numel(data1));
+         % Update plots
+            set(hLine1(1), 'XData', xData, 'YData', data1);
+            set(hLine1(2), 'XData', xData, 'YData', data2);
+            set(hLine2(1), 'XData', xData, 'YData', data3);
+            set(hLine2(2), 'XData', xData, 'YData', data4);
+
+            drawnow; % Update the plots
+             data1 =[];
+               data2 = [];
+               data3 = [];
+               data4 =[];
+      end
+          
      %    DataSpeed1 = rmoutliers(DataSpeed1);
      %    DataSpeed2 = rmoutliers(DataSpeed2);
      %    % data1Single = single(typecast(uint32(data1), 'single'))
