@@ -2,8 +2,8 @@
 device = serialport("COM9",12e6);
 
 %% Write 
-enable = 19 ;
-RefSpeed =700;
+enable = 18 ;
+RefSpeed =3000;
 %Need to convert speed accordinly as in the host model
 Speed = RefSpeed *1/PU_System.N_base;
 message = [Speed;enable]
@@ -39,38 +39,56 @@ device = serialport("COM9",12e6);
 
 try
   while true
-    data = read(device, 600, 'uint16');
+    data = read(device, 600, 'uint32');
     startTime = datetime('now');
-    % = [timeStamps, currentTime];  % Append current time to timestamps
-    uint32_value_restored = uint32(single(data) * inverse_Scaling_Factor);
-    Singleval = single(typecast(uint32(uint32_value_restored), 'single'))
 
-    
-      % data1 = [data1, Singleval(1:2:end)];
-      % data2 = [data2, Singleval(2:2:end)];
-      % DataSpeed1 = [DataSpeed1, data1(1:2:end)];
-      % DataSpeed2 = [DataSpeed2, data1(2:2:end)];
-      data1 = [data1, Singleval(1:4:end).* PU_System.N_base];
-      data2 = [data2, Singleval(2:4:end).* PU_System.N_base];
-      data3 = [data3, Singleval(3:4:end).* PU_System.I_base];
-      data4 =[data4, Singleval(4:4:end)* PU_System.I_base];
+    %DecodeUint32 into two uint16s 
+    % Extract the high 16 bits
+    Tempdata = data;
+    % msb_uint16 =  bitand(Tempdata, uint32(65535));  % Isolate lower 16 bits
+    % lsb_uint16 = bitshift(Tempdata, -16);       % Shift right by 16 bits to get upper 16 bits
+    % lsb_uint16 = bitand(lsb_uint16, uint32(65535)); % Mask out upper bits of shifted value
 
-      if numel(data1) > 1000
-        % Get current time elapsed
-        timeElapsed = seconds(datetime('now') - startTime);
-        xData = linspace(0, timeElapsed, numel(data1));
-         % Update plots
+    output1 = uint16(bitshift(Tempdata, -16)); 
+    % Extract the low 16 bits
+    output2 = uint16(bitand(uint32(Tempdata), uint32(65535))); 
+   
+    uint32_value_restored1 = uint32(single(output1) * inverse_Scaling_Factor);
+    uint32_value_restored2 = uint32(single(output2) * inverse_Scaling_Factor);
+
+    Singleval1 = single(typecast(uint32(uint32_value_restored1), 'single'));
+    Singleval2 = single(typecast(uint32(uint32_value_restored2), 'single'));
+      % 
+      % % data1 = [data1, Singleval(1:2:end)];
+      % % data2 = [data2, Singleval(2:2:end)];
+      % % DataSpeed1 = [DataSpeed1, data1(1:2:end)];
+      % % DataSpeed2 = [DataSpeed2, data1(2:2:end)];
+
+      data1 = [data1, Singleval1(1:2:end)];
+      data2 = [data2, Singleval1(2:2:end)];
+      data3 = [data3, Singleval2(1:2:end)];
+      data4 = [data3, Singleval2(2:2:end)]
+       % data1 = [data1, Singleval1(1:2:end).* PU_System.N_base];
+       % data2 = [data2, Singleval1(2:2:end).* PU_System.N_base];
+       % data3 = [data3, Singleval2(1:2:end).* PU_System.I_base];
+       % data4 =[data4, Singleval2(2:2:end)* PU_System.I_base];
+      % 
+       if numel(data1) > 1000
+         % Get current time elapsed
+         timeElapsed = seconds(datetime('now') - startTime);
+         xData = linspace(0, timeElapsed, numel(data1));
+          % Update plots
             set(hLine1(1), 'XData', xData, 'YData', data1);
-            set(hLine1(2), 'XData', xData, 'YData', data2);
-            set(hLine2(1), 'XData', xData, 'YData', data3);
-            set(hLine2(2), 'XData', xData, 'YData', data4);
-
-            drawnow; % Update the plots
-             data1 =[];
-               data2 = [];
-               data3 = [];
-               data4 =[];
-      end
+             set(hLine1(2), 'XData', xData, 'YData', data2);
+             set(hLine2(1), 'XData', xData, 'YData', data3);
+             set(hLine2(2), 'XData', xData, 'YData', data4);
+       
+             drawnow; % Update the plots
+              data1 =[];
+                data2 = [];
+                data3 = [];
+                data4 =[];
+       end
           
      %    DataSpeed1 = rmoutliers(DataSpeed1);
      %    DataSpeed2 = rmoutliers(DataSpeed2);
