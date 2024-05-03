@@ -5,7 +5,7 @@ device = serialport("COM9",12e6);
 % option 1 = 17, 19 
 % option 2 = 33, 35 (higher numbers - field weakening enabled 
 % option 3 = 51, 49 
-enable = 50 ;
+enable = 18 ;
 RefSpeed =1000;
 %Need to convert speed accordinly as in the host model
 Speed = RefSpeed *1/PU_System.N_base;
@@ -40,10 +40,14 @@ device = serialport("COM9",12e6);
     inverse_Scaling_Factor =  single(uint32(4294967295)) / single(uint16(65535));
     %timeStamps =[];
 
+    %Predifine the time vector for 600 samples 
+    Samples = 600;
+    sampleInterval = 50e-6;% 50microseconds
+    xData = (0:Samples-1)*sampleInterval;
 try
   while true
     data = read(device, 600, 'uint32');
-    startTime = datetime('now');
+    %startTime = datetime('now');
 
     %DecodeUint32 into two uint16s 
     % Extract the high 16 bits
@@ -72,11 +76,11 @@ try
       % data3 = [data3, Singleval2(1:2:end)];
       % data4 = [data3, Singleval2(2:2:end)];
       %Speed and %Iq 
-       % data1 = [data1, Singleval1(1:2:end).* PU_System.N_base];
-       % data2 = [data2, Singleval1(2:2:end).* PU_System.N_base];
-       % data3 = [data3, Singleval2(1:2:end).* PU_System.I_base];
-       % data4 =[data4, Singleval2(2:2:end)* PU_System.I_base];
-       % FilteredSpeed = MAF_filter(data2,19,5);
+       data1 = [data1, Singleval1(1:2:end).* PU_System.N_base];
+       data2 = [data2, Singleval1(2:2:end).* PU_System.N_base];
+       data3 = [data3, Singleval2(1:2:end).* PU_System.I_base];
+       data4 =[data4, Singleval2(2:2:end)* PU_System.I_base];
+       FilteredSpeed = MAF_filter(data2,19,5);
        % %Id and Ia/Ib
        %  data1 = [data1, Singleval1(1:2:end).* PU_System.I_base];
        % data2 = [data2, Singleval1(2:2:end).* PU_System.I_base];
@@ -86,25 +90,26 @@ try
        % Filtereddata4 = MAF_filter(data4,5,3);
 
        %Speed and Torque power 
-       data1 = [data1, Singleval1(1:2:end).* PU_System.N_base];
-       data2 = [data2, Singleval1(2:2:end).* PU_System.N_base];
-       data3 = [data3, Singleval2(1:2:end).* PU_System.T_base];
-       data4 = [data4, Singleval2(2:2:end).* PU_System.P_base];
+       % data1 = [data1, Singleval1(1:2:end).* PU_System.N_base];
+       % data2 = [data2, Singleval1(2:2:end).* PU_System.N_base];
+       % data3 = [data3, Singleval2(1:2:end).* PU_System.T_base];
+       % data4 = [data4, Singleval2(2:2:end).* PU_System.P_base];
         
 
        if numel(data1) > 500
          % Get current time elapsed
-         timeElapsed = seconds(datetime('now') - startTime);
-         xData = linspace(0, timeElapsed, numel(data1));
+         %timeElapsed = seconds(datetime('now') - startTime);
+         %xData = linspace(0, timeElapsed, numel(data1));
           % Update plots
-            set(hLine1(1), 'XData', xData, 'YData', data1);
-             set(hLine1(2), 'XData', xData, 'YData', data2);
-            set(hLine2(1), 'XData', xData, 'YData', data3);
-            set(hLine2(2), 'XData', xData, 'YData', data4);
+            % set(hLine1(1), 'XData', xData, 'YData', data1);
+            %  set(hLine1(2), 'XData', xData, 'YData', data2);
+            % set(hLine2(1), 'XData', xData, 'YData', data3);
+            % set(hLine2(2), 'XData', xData, 'YData', data4);
             % for Speed
-             % set(hLine1(2), 'XData', xData, 'YData', FilteredSpeed{5,19});
-              % set(hLine2(1), 'XData', xData, 'YData', data3);
-              % set(hLine2(2), 'XData', xData, 'YData', data4);
+                   set(hLine1(1), 'XData', xData, 'YData', data1);
+             set(hLine1(2), 'XData', xData, 'YData', FilteredSpeed{5,19});
+              set(hLine2(1), 'XData', xData, 'YData', data3);
+              set(hLine2(2), 'XData', xData, 'YData', data4);
             
              % % For Ia and IB
              % set(hLine2(1), 'XData', xData, 'YData', Filtereddata3{2,5});
