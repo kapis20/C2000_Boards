@@ -5,7 +5,7 @@ device = serialport("COM9",12e6);
 % option 1 = 17, 19 
 % option 2 = 33, 35 (higher numbers - field weakening enabled 
 % option 3 = 51, 49 
-enable = 19 ;
+enable = 18 ;
 RefSpeed =1000;
 %Need to convert speed accordinly as in the host model
 Speed = RefSpeed *1/PU_System.N_base;
