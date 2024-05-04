@@ -55,7 +55,7 @@ try
     % msb_uint16 =  bitand(Tempdata, uint32(65535));  % Isolate lower 16 bits
     % lsb_uint16 = bitshift(Tempdata, -16);       % Shift right by 16 bits to get upper 16 bits
     % lsb_uint16 = bitand(lsb_uint16, uint32(65535)); % Mask out upper bits of shifted value
-
+    % Shift right by 16 bits to get upper 16 bits
     output1 = uint16(bitshift(Tempdata, -16)); 
     % Extract the low 16 bits
     output2 = uint16(bitand(uint32(Tempdata), uint32(65535))); 
