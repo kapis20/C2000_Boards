@@ -5,17 +5,17 @@ device = serialport("COM9",12e6);
 % option 1 = 17, 19 
 % option 2 = 33, 35 (higher numbers - field weakening enabled 
 % option 3 = 51, 49 
-enable = 18 ;
+enable = 19 ;
 RefSpeed =1000;
 %Need to convert speed accordinly as in the host model
 Speed = RefSpeed *1/PU_System.N_base;
 message = [Speed;enable]
 write(device,message,'single');
-
-delete(device);
-clear device
+% 
+% delete(device);
+% clear device
 %% Receive 
-device = serialport("COM9",12e6);
+% device = serialport("COM9",12e6);
 
     data1 = [];
     data2 = [];
