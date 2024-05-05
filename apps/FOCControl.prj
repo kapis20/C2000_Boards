@@ -1,0 +1,77 @@
+<deployment-project plugin="plugin.apptool" plugin-version="1.0">
+  <configuration build-checksum="231194237" file="D:\Projects\C2000_Boards\apps\FOCControl.prj" location="D:\Projects\C2000_Boards\apps" name="FOCControl" target="target.mlapps" target-name="Package App">
+    <param.appname>FOCControl</param.appname>
+    <param.authnamewatermark>Kacper Sikorski</param.authnamewatermark>
+    <param.email>kfsikorski1@sheffield.ac.uk</param.email>
+    <param.company />
+    <param.icon />
+    <param.icons />
+    <param.summary>GUI for FOC control with field weakening of PMSM motor</param.summary>
+    <param.description />
+    <param.screenshot>C:\Users\kapis\AppData\Local\Temp\tp1c8be487_71ec_4840_9896_1b1ecef34d5b.png</param.screenshot>
+    <param.version>1.0</param.version>
+    <param.products.name />
+    <param.products.id />
+    <param.products.version />
+    <param.platforms />
+    <param.output>${PROJECT_ROOT}</param.output>
+    <param.guid>446b8ebe-ea62-4a4b-a2d8-bfa520f41b14</param.guid>
+    <unset>
+      <param.company />
+      <param.icon />
+      <param.icons />
+      <param.description />
+      <param.version />
+      <param.products.name />
+      <param.products.id />
+      <param.products.version />
+      <param.platforms />
+      <param.output />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}\FOC_Control.mlapp</file>
+    </fileset.main>
+    <fileset.depfun>
+      <file>D:\Projects\C2000_Boards\Pics\snapedit_1714763450173-removebg-preview (2).png</file>
+      <file>D:\Projects\C2000_Boards\Pics\sq_logo.jpg</file>
+    </fileset.depfun>
+    <fileset.resources />
+    <fileset.package />
+    <build-deliverables>
+      <file location="D:\Projects\C2000_Boards" name="apps" optional="false">D:\Projects\C2000_Boards\apps</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2023b</root>
+      <toolboxes>
+        <toolbox name="matlabcoder" />
+        <toolbox name="embeddedcoder" />
+      </toolboxes>
+      <toolbox>
+        <matlabcoder>
+          <enabled>true</enabled>
+        </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <embeddedcoder>
+          <enabled>true</enabled>
+        </embeddedcoder>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.0</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>
