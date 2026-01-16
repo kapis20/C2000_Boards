@@ -7,6 +7,30 @@ This repository contains MATLAB/Simulink projects for **TI C2000** motor-control
 ## Demo
 [Watch the demo video (Google Drive)](https://drive.google.com/file/d/1xDw4fCx2-SH803H9Xw2Jfc1-25vwOXAM/view?usp=sharing)
 
+## Figures / Screenshots
+
+### Hardware test setup
+FOC / motor-control development setup using TI C2000 hardware, motor + load/fixture, and host-side serial link.
+
+<p align="center">
+  <img src="Pics/hardware_setup.png" width="850" />
+</p>
+
+### FOC dashboard workflow (high-level)
+App flow for selecting COM port, configuring speed/mode, starting/stopping the motor, and streaming telemetry.
+
+<p align="center">
+  <img src="Pics/foc_dashboard_flow.png" width="850" />
+</p>
+
+### Real-time telemetry examples (dashboard)
+Below are example plots streamed and visualised in the App Designer dashboard.
+
+<p align="center">
+  <img src="Pics/dashboard_speedref_speedfeed.png" width="420" />
+  <img src="Pics/dashboard_ia_position.png" width="420" />
+</p>
+
 ## What’s inside
 
 ### Folder structure
